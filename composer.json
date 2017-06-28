@@ -1,0 +1,8 @@
+{
+    "name": "ethercreative/apie",
+    "autoload": {
+        "psr-4": {
+            "ethercreative\\apie\\": "src/"
+        }
+    }
+}
