@@ -1,7 +1,5 @@
 <?php
 
-namespace ethercreative\apie\database\migrations;
-
 use yii\db\Migration;
 
 /**

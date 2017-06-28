@@ -1,7 +1,5 @@
 <?php
 
-namespace ethercreative\apie\database\migrations;
-
 use yii\db\Migration;
 
 /**
@@ -16,10 +14,12 @@ class m170614_145141_create_team_table extends Migration
     {
         $this->createTable('team', [
             'id' => $this->primaryKey(),
-
+            'name' => $this->string()->notNull(),
             'created_at' => $this->timestamp(),
             'updated_at' => $this->timestamp(),
         ]);
+
+        $this->createIndex('team_name_i', 'team', 'name');
     }
 
     /**

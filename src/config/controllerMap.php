@@ -8,13 +8,12 @@ return [
     'register' => 'ethercreative\apie\controllers\api\RegisterController',
     'reset' => 'ethercreative\apie\controllers\api\ResetController',
     'teams' => 'ethercreative\apie\controllers\api\TeamsController',
-    // 'users' => 'ethercreative\apie\controllers\api\UsersController',
 
     'migrate' => [
         'class' => 'yii\console\controllers\MigrateController',
-        'migrationNamespaces' => [
-            'app\database\migrations',
-            'apie\database\migrations',
+        'migrationPath' => [
+            'database/migrations',
+            'vendor/ethercreative/apie/src/database/migrations',
         ],
     ],
 ];
