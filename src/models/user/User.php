@@ -11,7 +11,7 @@ class User extends \ethercreative\apie\ActiveRecord implements \yii\web\Identity
 
     private $_password;
 
-    public function tableName()
+    public static function tableName()
     {
         return 'user';
     }
