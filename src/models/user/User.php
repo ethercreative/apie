@@ -2,10 +2,24 @@
 
 namespace ethercreative\apie\models\user;
 
+use Yii;
+
 class User extends \ethercreative\apie\ActiveRecord implements \yii\web\IdentityInterface
 {
     use \ethercreative\apie\traits\IdentityInterface;
     use \ethercreative\apie\traits\AuthenticatedUser;
+
+    private $_password;
+
+    public function afterFind()
+    {
+        $return = parent::afterFind();
+
+        $this->_password = $this->password;
+        $this->password = null;
+
+        return $return;
+    }
 
     public function rules()
     {

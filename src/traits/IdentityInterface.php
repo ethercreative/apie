@@ -9,6 +9,11 @@ trait IdentityInterface
         return static::findOne($id);
     }
 
+    public static function findByEmail($email)
+    {
+        return static::findOne(['email' => $email]);
+    }
+
     public static function findIdentityByAccessToken($token, $type = null)
     {
         switch ($type)
