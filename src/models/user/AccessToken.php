@@ -4,6 +4,11 @@ namespace ethercreative\apie\models\user;
 
 class AccessToken extends \ethercreative\apie\ActiveRecord
 {
+    public function tableName()
+    {
+        return 'access_token';
+    }
+
     public function behaviors()
     {
         return \yii\helpers\ArrayHelper::merge(parent::behaviors(), [

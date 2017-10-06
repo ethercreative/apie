@@ -4,6 +4,11 @@ namespace ethercreative\apie\models\user;
 
 class ApiKey extends \ethercreative\apie\ActiveRecord
 {
+    public function tableName()
+    {
+        return 'api_key';
+    }
+
     public function behaviors()
     {
         return \yii\helpers\ArrayHelper::merge(parent::behaviors(), [

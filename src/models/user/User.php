@@ -11,6 +11,11 @@ class User extends \ethercreative\apie\ActiveRecord implements \yii\web\Identity
 
     private $_password;
 
+    public function tableName()
+    {
+        return 'user';
+    }
+
     public function afterFind()
     {
         $return = parent::afterFind();
