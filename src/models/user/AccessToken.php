@@ -4,7 +4,7 @@ namespace ethercreative\apie\models\user;
 
 class AccessToken extends \ethercreative\apie\ActiveRecord
 {
-    public function tableName()
+    public static function tableName()
     {
         return 'access_token';
     }
