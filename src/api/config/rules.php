@@ -5,10 +5,10 @@ return [
         'class' => 'yii\rest\UrlRule',
         'pluralize' => false,
         'controller' => 'profile',
-        'only' => [
-            'index',
-            'update',
-            'options',
+        'patterns' => [
+            'GET,HEAD' => 'index',
+            'PUT,PATCH,POST' => 'update',
+            'OPTIONS' => 'options',
         ],
     ],
     [
@@ -25,9 +25,7 @@ return [
     ],
     [
         'class' => 'yii\rest\UrlRule',
-        'controller' => [
-            'users',
-        ],
+        'controller' => 'user',
         'only' => [
             'index',
             'view',

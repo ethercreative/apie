@@ -1,5 +1,9 @@
 {
     "name": "ethercreative/apie",
+    "require": {
+        "kartik-v/yii2-grid": "@dev",
+        "ethercreative/yii2-beenpwned-validator": "^0.1.1"
+    },
     "autoload": {
         "psr-4": {
             "ethercreative\\apie\\": "src/"

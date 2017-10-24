@@ -12,19 +12,29 @@ class Login extends \yii\base\Model
     private $user,
             $tokens;
 
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+
+        $behaviors['loginAttempts'] = [
+            'class' => '\ethercreative\loginattempts\LoginAttemptBehavior',
+        ];
+
+        return $behaviors;
+    }
+
     public function rules()
     {
         return [
             [['email', 'password'], 'required'],
             ['email', 'email'],
-            ['email', 'exist', 'targetClass' => '\ethercreative\apie\models\user\User', 'message' => 'Email or password incorrect.'],
             [['email', 'password'], 'checkCredentials'],
         ];
     }
 
     public function checkCredentials()
     {
-        if ($this->email && $this->password)
+        if (!$this->hasErrors() && $this->email && $this->password)
         {
             if ($this->user = User::find()->where(['email' => $this->email])->one())
             {

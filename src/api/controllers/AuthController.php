@@ -1,6 +1,6 @@
 <?php
 
-namespace ethercreative\apie\controllers\api;
+namespace ethercreative\apie\api\controllers;
 
 class AuthController extends Controller
 {

@@ -29,10 +29,14 @@ class User extends \ethercreative\apie\ActiveRecord implements \yii\web\Identity
     public function rules()
     {
         return [
-            [['name', 'email', 'password'], 'required'],
+            [['name', 'email'], 'required'],
             ['email', 'email'],
             ['email', 'unique'],
-            ['password', 'string', 'min' => 6],
+            [['name'], 'safe', 'on' => 'update'],
+
+            ['password', 'required', 'on' => 'default'],
+            ['password', 'string', 'min' => 6, 'on' => 'default'],
+            ['password', '\ethercreative\validators\BeenPwned'],
         ];
     }
 
