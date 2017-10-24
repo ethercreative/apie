@@ -9,7 +9,7 @@ use yii\caching\DbDependency;
 use yii\helpers\ArrayHelper;
 use yii\web\JsExpression;
 
-class CrudController extends \backend\controllers\Controller
+class CrudController extends Controller
 {
     public
         $modelClass,

@@ -4,7 +4,7 @@ namespace ethercreative\apie\backend\controllers;
 
 use Yii;
 
-class DefaultController extends \ethercreative\apie\backend\controllers\Controller
+class DefaultController extends Controller
 {
     public
         $forgottenFormClass = 'ethercreative\apie\models\ForgottenForm',

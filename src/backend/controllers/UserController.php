@@ -2,7 +2,7 @@
 
 namespace ethercreative\apie\backend\controllers;
 
-class UserController extends \ethercreative\apie\backend\controllers\CrudController
+class UserController extends CrudController
 {
     public
         $name = 'User',

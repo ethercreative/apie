@@ -2,7 +2,7 @@
 
 namespace ethercreative\apie\backend\controllers;
 
-class TeamController extends \ethercreative\apie\backend\controllers\CrudController
+class TeamController extends CrudController
 {
     public
         $name = 'Team',
