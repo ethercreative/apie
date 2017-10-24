@@ -2,6 +2,7 @@
 
 namespace ethercreative\apie\traits;
 
+use Yii;
 use yii\helpers\Inflector;
 
 trait Breadcrumbs
