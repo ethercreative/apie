@@ -6,7 +6,7 @@ class RefreshToken extends \ethercreative\apie\ActiveRecord
 {
     public static function tableName()
     {
-        return 'refresh_token';
+        return '{{%refresh_token}}';
     }
 
     public function behaviors()

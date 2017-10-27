@@ -8,7 +8,7 @@ class Reset extends \ethercreative\apie\ActiveRecord
 {
     public static function tableName()
     {
-        return 'user_reset';
+        return '{{%user_reset}}';
     }
 
     public function rules()

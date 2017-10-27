@@ -14,6 +14,7 @@ class CrudController extends Controller
     public
         $modelClass,
         $searchClass,
+        $parent_id,
         $viewPath = '@apie/backend/views/crud',
         $views = [],
         $columns = [
@@ -24,12 +25,14 @@ class CrudController extends Controller
 
     private $_key;
 
-    public function actionIndex()
+    public function actionIndex($parentRelation = null)
     {
         if ($this->searchClass)
         {
+            $get = array_merge(Yii::$app->request->get(), ['parentRelation' => $parentRelation]);
+
             $searchModel = new $this->searchClass;
-            $dataProvider = $searchModel->search(Yii::$app->request->get());
+            $dataProvider = $searchModel->search($get);
         }
         else
         {
@@ -39,10 +42,10 @@ class CrudController extends Controller
             ]);
         }
 
-        $tableName = (string) ($this->modelClass)::tableName();
+        $tableName = (string) preg_replace('/([^\w\d\-\_])/', '', ($this->modelClass)::tableName());
 
         if ($tableName[0] !== '"')
-            $tableName = '"' . $tableName . '"';
+            $tableName = '"' . Yii::$app->db->tablePrefix . $tableName . '"';
 
         $dependency = new DbDependency;
         $dependency->sql = 'select extract(epoch from max("updated_at")) + count(id) as "updated_at" from ' . $tableName;
@@ -55,6 +58,8 @@ class CrudController extends Controller
         if ($defaults = Yii::$app->request->get('defaults', []))
             $defaults['defaults'] = $defaults;
 
+        $defaults['parentRelation'] = $parentRelation;
+
         return $this->render($this->getCustomViewPath('index'), [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
@@ -63,13 +68,19 @@ class CrudController extends Controller
         ]);
     }
 
-    public function actionCreate(array $defaults = null)
+    public function actionCreate(array $defaults = null, $parentRelation = null)
     {
         $model = new $this->modelClass;
 
         if ($defaults)
         {
             $model->setAttributes($defaults);
+        }
+
+        if ($parentRelation)
+        {
+            $model->setParentRelation($parentRelation);
+            $defaults['parentRelation'] = $parentRelation;
         }
 
         $body = Yii::$app->request->getBodyParams();

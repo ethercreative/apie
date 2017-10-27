@@ -3,15 +3,14 @@ use yii\bootstrap\Tabs;
 
 if ($tabs && $model)
 {
-    // die('<pre>'.print_r([$tabs, $model->attributes], 1).'</pre>');
-
     function placeholder($input, $model)
     {
-        if (is_array($input))
-            die('<pre>'.print_r($input, 1).'</pre>');
+        preg_match_all('/{{([\w\d_]+)}}/', $input, $matches);
+        $attributes = array_combine($matches[0], $matches[1]);
 
-        if (substr($input, 0, 2) == '{{' && substr($input, -2) == '}}')
-            $input = $model->{str_replace(['{', '}'], '', $input)};
+        foreach ($attributes as $key => $attribute) {
+            $input = str_replace($key, $model->{$attribute}, $input);
+        }
 
         return $input;
     }
@@ -33,8 +32,6 @@ if ($tabs && $model)
             }
         }
     }
-
-    // die('<pre>'.print_r([$tabs, $model->attributes, $model->className()], 1).'</pre>');
 
     echo Tabs::widget([
         'items' => $tabs,

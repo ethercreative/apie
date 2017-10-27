@@ -18,7 +18,10 @@ class UserController extends CrudController
                 'from' => 'created_from',
                 'to' => 'created_to',
             ],
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{update} {delete}',
+            ],
         ],
         $fields = [
             'name' => ['type' => 'textInput', 'options' => ['min-length' => 3, 'max-length' => 64]],

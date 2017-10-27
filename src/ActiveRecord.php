@@ -4,6 +4,8 @@ namespace ethercreative\apie;
 
 class ActiveRecord extends \yii\db\ActiveRecord
 {
+    use \ethercreative\apie\traits\ParentColumn;
+
     public function behaviors()
     {
         return [

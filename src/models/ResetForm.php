@@ -15,7 +15,7 @@ class ResetForm extends \yii\base\Model
     {
         return [
             [['new_password', 'confirm_password'], 'required'],
-            ['new_password', '\ethercreative\apie\validators\BeenPwned'],
+            ['new_password', '\ethercreative\validators\BeenPwned'],
         ];
     }
 

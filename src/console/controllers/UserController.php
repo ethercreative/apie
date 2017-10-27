@@ -5,10 +5,16 @@ namespace ethercreative\apie\console\controllers;
 use yii\helpers\Console;
 use yii\validators\EmailValidator;
 
+/**
+ * Users CRUD
+ */
 class UserController extends \yii\console\Controller
 {
     public $modelClass = 'ethercreative\apie\models\user\User';
 
+    /**
+     * Create a new user
+     */
     public function actionCreate()
     {
         $name = $this->prompt('Name:', ['required' => true, 'validator' => function($input, &$error)
@@ -82,5 +88,37 @@ class UserController extends \yii\console\Controller
             echo 'User created.';
         else
             echo 'Validation errors.';
+    }
+
+    /**
+     * Update a users record
+     */
+    public function actionUpdate($id)
+    {
+
+    }
+
+    /**
+     * Update a single attribute
+     */
+    public function actionUpdateAttribute($id, $key, $value)
+    {
+
+    }
+
+    /**
+     * View a user
+     */
+    public function actionView($id)
+    {
+
+    }
+
+    /**
+     * Delete a user
+     */
+    public function actionDelete($id)
+    {
+
     }
 }

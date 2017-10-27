@@ -13,7 +13,7 @@ class User extends \ethercreative\apie\ActiveRecord implements \yii\web\Identity
 
     public static function tableName()
     {
-        return 'user';
+        return '{{%user}}';
     }
 
     public function afterFind()

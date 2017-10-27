@@ -6,7 +6,7 @@ class ApiKey extends \ethercreative\apie\ActiveRecord
 {
     public static function tableName()
     {
-        return 'api_key';
+        return '{{%api_key}}';
     }
 
     public function behaviors()
