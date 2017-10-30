@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "cf2684d13f369025b27ba8c631eb3226",
+    "content-hash": "0777b5f0c9fee89c1f5d094691e0d577",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -361,6 +361,43 @@
                 "yii2"
             ],
             "time": "2017-10-23T10:13:13+00:00"
+        },
+        {
+            "name": "ethercreative/yii2-login-attempts-behavior",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ethercreative/yii2-login-attempts-behavior.git",
+                "reference": "87e766644814c2ce6806df43650b2c808b96e71a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ethercreative/yii2-login-attempts-behavior/zipball/87e766644814c2ce6806df43650b2c808b96e71a",
+                "reference": "87e766644814c2ce6806df43650b2c808b96e71a",
+                "shasum": ""
+            },
+            "require": {
+                "yiisoft/yii2": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ethercreative\\loginattempts\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Matt Edmonston",
+                    "email": "matt@ethercreative.co.uk"
+                }
+            ],
+            "description": "Disable login after multiple failures.",
+            "keywords": [
+                "Behavior",
+                "yii2"
+            ],
+            "time": "2017-10-23T15:12:31+00:00"
         },
         {
             "name": "ezyang/htmlpurifier",
