@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "603754aa09f2b4b6f175609c0fe45a8f",
+    "content-hash": "cf2684d13f369025b27ba8c631eb3226",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -748,16 +748,16 @@
         },
         {
             "name": "kartik-v/yii2-markdown",
-            "version": "dev-master",
+            "version": "v1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-markdown.git",
-                "reference": "cf172939cddf83c7136112b1647b2e3fd7518e18"
+                "reference": "5974696ccd1710b0f35dccfe509e7a01c6b3c1f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-markdown/zipball/cf172939cddf83c7136112b1647b2e3fd7518e18",
-                "reference": "cf172939cddf83c7136112b1647b2e3fd7518e18",
+                "url": "https://api.github.com/repos/kartik-v/yii2-markdown/zipball/5974696ccd1710b0f35dccfe509e7a01c6b3c1f7",
+                "reference": "5974696ccd1710b0f35dccfe509e7a01c6b3c1f7",
                 "shasum": ""
             },
             "require": {
@@ -796,7 +796,7 @@
                 "yii",
                 "yii2"
             ],
-            "time": "2016-12-19T21:37:42+00:00"
+            "time": "2015-01-12T11:42:03+00:00"
         },
         {
             "name": "michelf/php-markdown",
@@ -1150,8 +1150,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "kartik-v/yii2-grid": 20,
-        "kartik-v/yii2-markdown": 20
+        "kartik-v/yii2-grid": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

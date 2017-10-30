@@ -3,7 +3,7 @@
     "require": {
         "kartik-v/yii2-grid": "@dev",
         "ethercreative/yii2-beenpwned-validator": "^0.1.1",
-        "kartik-v/yii2-markdown": "dev-master"
+        "kartik-v/yii2-markdown": "*"
     },
     "autoload": {
         "psr-4": {
