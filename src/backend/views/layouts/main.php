@@ -8,7 +8,7 @@ use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
-use backend\assets\AppAsset;
+use ethercreative\apie\backend\assets\AppAsset;
 use yii\helpers\Url;
 
 AppAsset::register($this);
