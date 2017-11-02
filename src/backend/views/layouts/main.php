@@ -10,8 +10,20 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use ethercreative\apie\backend\assets\AppAsset;
 use yii\helpers\Url;
+use yii\helpers\Inflector;
 
 AppAsset::register($this);
+
+$title = $this->title;
+
+if (!$title)
+{
+    $controller = $this->context->hasProperty('name') && $this->context->name ? $this->context->name : Inflector::humanize($this->context->id);
+    $action = Inflector::humanize($this->context->action->id);
+
+    $title = join(' - ', [$controller, $action]);
+}
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -21,7 +33,7 @@ AppAsset::register($this);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
+    <title><?= Html::encode($title) ?> | <?= Yii::$app->name ?></title>
     <?php $this->head() ?>
 </head>
 <body>
