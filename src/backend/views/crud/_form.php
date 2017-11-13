@@ -1,18 +1,35 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use yii\bootstrap\Modal;
-use yii\widgets\Pjax;
 use yii\helpers\ArrayHelper;
 
+if (empty($fields))
+    $fields = Yii::$app->controller->getFields();
+
 $modals = [];
+$endForm = true;
 
-$form = ActiveForm::begin();
+if (!isset($outputModals))
+    $outputModals = true;
 
-echo Html::errorSummary($model);
+if (empty($form))
+    $form = ActiveForm::begin();
+else
+    $endForm = false;
 
-foreach (Yii::$app->controller->getFields() as $name => $options)
+if ((!isset($summary) || $summary) && $model->hasErrors())
+    echo $form->errorSummary($model) . '<hr>';
+
+foreach ($fields as $name => $options)
 {
+    if (!empty($options['modal']))
+    {
+        if ($outputModals)
+            $modals[$name] = $options['modal'];
+        else
+            Yii::$app->modals->addModal($name, $options['modal']);
+    }
+
     if ($options === 'hr')
     {
         echo '<hr>';
@@ -21,16 +38,33 @@ foreach (Yii::$app->controller->getFields() as $name => $options)
 
     if (is_string($options))
     {
-        echo $options;
+        $header = substr_count($options, '#');
+
+        if ($header)
+            echo Html::tag('h' . $header, trim(str_replace('#', '', $options)));
+        else
+            echo $options;
+
         continue;
     }
 
     if (is_int($name))
     {
-        $width = 12 / count($options);
+        $width = floor(12 / count($options));
         echo '<div class="row">';
         foreach ($options as $key => $value)
         {
+            if (!empty($value['modal']))
+            {
+                if ($outputModals)
+                    $modals[$key] = $value['modal'];
+                else
+                    Yii::$app->modals->addModal($key, $value['modal']);
+            }
+
+            if (!empty($prepend))
+                $key = $prepend . '[' . $key . ']';
+
             echo '<div class="col-md-' . $width . '">';
             echo $this->render('_field', ['name' => $key, 'options' => $value, 'model' => $model, 'form' => $form]);
             echo '</div>';
@@ -39,48 +73,21 @@ foreach (Yii::$app->controller->getFields() as $name => $options)
     }
     else
     {
+        if (!empty($prepend))
+            $name = $prepend . '[' . $name . ']';
+
         echo $this->render('_field', ['name' => $name, 'options' => $options, 'model' => $model, 'form' => $form]);
     }
 }
-?>
 
-<hr>
+if (!empty($additional))
+    echo $additional;
 
-<?= $additional ?>
+if (!isset($controls) || $controls)
+    echo $this->render('_controls', ['model' => $model]);
 
-<div class="form-group">
-    <?= Html::submitButton('<i class="glyphicon glyphicon-floppy-disk"></i> Save', ['class' => 'btn btn-primary']) ?>
-    <?= $model->isNewRecord ? Html::submitButton('<i class="glyphicon glyphicon-floppy-disk"></i> Save and add another', ['class' => 'btn btn-primary', 'name' => 'additional', 'value' => 'yes']) : null ?>
-    <?= !$model->isNewRecord ? Html::a('<i class="glyphicon glyphicon-compressed"></i> Archive', ['archive', 'id' => $model->id], ['class' => 'btn btn-danger pull-right']) : null ?>
-</div>
+if ($endForm)
+    ActiveForm::end();
 
-<?php ActiveForm::end(); ?>
-
-<?php
-
-foreach ($modals as $key => $modal)
-{
-    Modal::begin([
-        'header' => "<h2>{$modal['title']}</h2>",
-        'toggleButton' => ['label' => 'click me', 'class' => 'hide', 'id' => 'modal-button-' . $key],
-    ]);
-
-    if (strpos($modal['content'], '@') !== false)
-    {
-        Pjax::begin();
-
-        echo $this->render($modal['content'], [
-            'model' => new $modal['model'],
-        ]);
-
-        Pjax::end();
-    }
-    else
-    {
-
-    }
-
-    Modal::end();
-}
-
-?>
+if ($outputModals)
+    $this->render('_modals', ['modals' => $modals]);

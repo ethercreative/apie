@@ -5,12 +5,8 @@ if ($tabs && $model)
 {
     function placeholder($input, $model)
     {
-        preg_match_all('/{{([\w\d_]+)}}/', $input, $matches);
-        $attributes = array_combine($matches[0], $matches[1]);
-
-        foreach ($attributes as $key => $attribute) {
-            $input = str_replace($key, $model->{$attribute}, $input);
-        }
+        if (substr($input, 0, 2) == '{{' && substr($input, -2) == '}}')
+            $input = $model->{str_replace(['{', '}'], '', $input)};
 
         return $input;
     }
