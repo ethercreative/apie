@@ -17,6 +17,7 @@ class CrudController extends Controller
         $parent_id,
         $viewPath = '@apie/backend/views/crud',
         $views = [],
+        $defaultOrder,
         $columns = [
             'id',
             'created_at:datetime',
@@ -41,6 +42,9 @@ class CrudController extends Controller
                 'query' => ($this->modelClass)::find(),
             ]);
         }
+
+        if ($this->defaultOrder)
+            $dataProvider->sort->defaultOrder = $this->defaultOrder;
 
         $tableName = (string) preg_replace('/([^\w\d\-\_])/', '', ($this->modelClass)::tableName());
 
@@ -119,10 +123,46 @@ class CrudController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->getBodyParams()) && $model->save())
+        $body = Yii::$app->request->getBodyParams();
+
+        if ($model->load($body))
         {
-            Yii::$app->session->addFlash('success', $this->name . ' updated successfully.');
-            return $this->refresh();
+            if (Yii::$app->request->isAjax)
+            {
+                Yii::$app->response->format = 'json';
+
+                return \yii\widgets\ActiveForm::validate($model);
+            }
+
+            if ($model->hasProperty('uploadAttributes') && !empty($model->uploadAttributes))
+            {
+                foreach ($model->uploadAttributes as $name => $attribute)
+                {
+                    $files = \yii\web\UploadedFile::getInstances($model, $name);
+
+                    $value = ArrayHelper::getValue($model, $attribute, []);
+
+                    foreach ($files as $file)
+                    {
+                        $filename = join('.', [uniqid('', true), $file->extension]);
+
+                        $file->saveAs(Yii::getAlias('@storage/uploads/') . $filename);
+
+                        $value[] = array_replace((array) $file, [
+                            'filename' => $filename,
+                            'tempName' => null,
+                        ]);
+                    }
+
+                    ArrayHelper::setValue($model, $attribute, $value);
+                }
+            }
+
+            if ($model->save())
+            {
+                Yii::$app->session->addFlash('success', $this->name . ' updated successfully.');
+                return $this->refresh();
+            }
         }
 
         return $this->render($this->getCustomViewPath('update'), [
@@ -218,10 +258,10 @@ class CrudController extends Controller
             }
 
             if ($templateResult = ArrayHelper::getValue($options, 'options.pluginOptions.templateResult'))
-                $options['options']['pluginOptions']['templateResult'] = new JsExpression('function(result) { return result.loading ? result.text : result.' . $templateResult . '; }');
+                $options['options']['pluginOptions']['templateResult'] = new JsExpression('function(result) { return result.' . $templateResult . ' || result.text; }');
 
             if ($templateSelection = ArrayHelper::getValue($options, 'options.pluginOptions.templateSelection'))
-                $options['options']['pluginOptions']['templateSelection'] = new JsExpression('function (result) { return result.loading ? result.text : result.' . $templateSelection . '; }');
+                $options['options']['pluginOptions']['templateSelection'] = new JsExpression('function (result) { return result.' . $templateSelection . ' || result.text; }');
         }
     }
 
@@ -235,19 +275,34 @@ class CrudController extends Controller
 
             $url = ArrayHelper::getValue($column, 'filterWidgetOptions.pluginOptions.ajax.url');
 
+            if (is_array($url))
+            {
+                $urlParts = $url;
+                $url = array_shift($urlParts);
+            }
+            else
+            {
+                $urlParts = [];
+            }
+
             if (strpos($url, '@api.') === 0)
             {
                 $getFields = join(',', ['id', ArrayHelper::getValue($column, 'filterWidgetOptions.pluginOptions.ajax.textColumn', 'name')]);
 
-                $column['filterWidgetOptions']['pluginOptions']['ajax']['url'] = Yii::$app->apiUrlManager->createAbsoluteUrl([substr($url, 5), 'access-token' => $this->api_key, 'fields' => $getFields]);
+                $column['filterWidgetOptions']['pluginOptions']['ajax']['url'] = Yii::$app->apiUrlManager->createAbsoluteUrl(array_replace_recursive($urlParts, [substr($url, 5), 'access-token' => $this->api_key, 'fields' => $getFields]));
                 $column['filterWidgetOptions']['pluginOptions']['ajax']['processResults'] = new JsExpression('function (results, params){ return {results:results}; }');
             }
 
+            if ($data = ArrayHelper::getValue($column, 'filterWidgetOptions.pluginOptions.ajax.data'))
+                $column['filterWidgetOptions']['pluginOptions']['ajax']['data'] = new JsExpression('function(params) { return {' . $data . ':params.term, page: params.page}; }');
+
             if ($templateResult = ArrayHelper::getValue($column, 'filterWidgetOptions.pluginOptions.templateResult'))
-                $column['filterWidgetOptions']['pluginOptions']['templateResult'] = new JsExpression('function(result) { return result.loading ? result.text : result.' . $templateResult . '; }');
+                $column['filterWidgetOptions']['pluginOptions']['templateResult'] = new JsExpression('function(result) { return result.' . $templateResult . ' || result.text; }');
 
             if ($templateSelection = ArrayHelper::getValue($column, 'filterWidgetOptions.pluginOptions.templateSelection'))
-                $column['filterWidgetOptions']['pluginOptions']['templateSelection'] = new JsExpression('function (result) { return result.loading ? result.text : result.' . $templateSelection . '; }');
+                $column['filterWidgetOptions']['pluginOptions']['templateSelection'] = new JsExpression('function (result) { return result.' . $templateSelection . ' || result.text; }');
+
+            // die('<pre>'.print_r($column, 1).'</pre>');
         }
 
         return $columns;
