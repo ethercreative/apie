@@ -16,7 +16,7 @@ use yii\helpers\Html;
         <?php foreach ($model->attributes as $key => $value): ?>
         <tr>
             <td><strong><?= $model->getAttributeLabel($key); ?></strong></td>
-            <td><?= $value; ?></td>
+            <td><?= is_array($value) ? '<pre>' . print_r($value) . '</pre>' : $value; ?></td>
         </tr>
         <?php endforeach; ?>
     </tbody>
