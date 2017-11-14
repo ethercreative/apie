@@ -90,4 +90,4 @@ if ($endForm)
     ActiveForm::end();
 
 if ($outputModals)
-    $this->render('_modals', ['modals' => $modals]);
+    echo $this->render('_modals', ['modals' => $modals]);
