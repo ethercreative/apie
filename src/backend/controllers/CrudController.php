@@ -146,12 +146,17 @@ class CrudController extends Controller
                     {
                         $filename = join('.', [uniqid('', true), $file->extension]);
 
-                        $file->saveAs(Yii::getAlias('@storage/uploads/') . $filename);
-
-                        $value[] = array_replace((array) $file, [
-                            'filename' => $filename,
-                            'tempName' => null,
-                        ]);
+                        if ($file->saveAs(Yii::getAlias('@storage/uploads/') . $filename))
+                        {
+                            $value[] = array_replace((array) $file, [
+                                'filename' => $filename,
+                                'tempName' => null,
+                            ]);
+                        }
+                        else
+                        {
+                            $model->addError($attribute, $file->error);
+                        }
                     }
 
                     ArrayHelper::setValue($model, $attribute, $value);
