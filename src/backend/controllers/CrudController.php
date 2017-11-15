@@ -140,7 +140,7 @@ class CrudController extends Controller
                 {
                     $files = \yii\web\UploadedFile::getInstances($model, $name);
 
-                    $value = ArrayHelper::getValue($model, $attribute, []);
+                    $value = array_filter(ArrayHelper::getValue($model, $attribute, []));
 
                     foreach ($files as $file)
                     {
@@ -159,7 +159,7 @@ class CrudController extends Controller
                         }
                     }
 
-                    ArrayHelper::setValue($model, $attribute, $value);
+                    ArrayHelper::setValue($model, $attribute, array_values($value));
                 }
             }
 
