@@ -40,12 +40,15 @@ else
 
             if ($files)
             {
-                foreach ($files as $file)
+                if (ArrayHelper::getValue($options, 'options.multiple'))
                 {
-                    foreach ($file as $k => $v)
-                        echo $form->field($model, $name . "[{$k}]")->hiddenInput(['value' => $v])->label(false);
+                    foreach ($files as $file)
+                    {
+                        foreach ($file as $k => $v)
+                            echo $form->field($model, $name . "[{$k}]")->hiddenInput(['value' => $v])->label(false);
+                    }
+                    $options['hint'] = join('<br>', array_keys(ArrayHelper::index($files, 'name')));
                 }
-                $options['hint'] = join('<br>', array_keys(ArrayHelper::index($files, 'name')));
             }
 
             break;
