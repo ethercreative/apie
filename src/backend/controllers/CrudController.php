@@ -14,6 +14,7 @@ class CrudController extends Controller
     public
         $modelClass,
         $searchClass,
+        $enableCache = true,
         $parent_id,
         $viewPath = '@apie/backend/views/crud',
         $views = [],
@@ -51,13 +52,16 @@ class CrudController extends Controller
         if ($tableName[0] !== '"')
             $tableName = '"' . Yii::$app->db->tablePrefix . $tableName . '"';
 
-        $dependency = new DbDependency;
-        $dependency->sql = 'select extract(epoch from max("updated_at")) + count(id) as "updated_at" from ' . $tableName;
-
-        Yii::$app->db->cache(function ($db) use ($dataProvider)
+        if ($this->enableCache)
         {
-             $dataProvider->prepare();
-        }, 3600, $dependency);
+            $dependency = new DbDependency;
+            $dependency->sql = 'select extract(epoch from max("updated_at")) + count(id) as "updated_at" from ' . $tableName;
+
+            Yii::$app->db->cache(function ($db) use ($dataProvider)
+            {
+                 $dataProvider->prepare();
+            }, 3600, $dependency);
+        }
 
         if ($defaults = Yii::$app->request->get('defaults', []))
             $defaults['defaults'] = $defaults;
