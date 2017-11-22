@@ -34,22 +34,36 @@ else
             break;
 
         case 'fileInput':
-            $files = ArrayHelper::getValue($model, str_replace(['[', ']'], ['.', ''], $name));
+            $files = ArrayHelper::getValue($model, str_replace(['[', ']'], ['.', ''], $name), []);
+
+            if (!is_array($files))
+                $files = [];
+
+            $files = array_filter($files);
 
             $options['options']['value'] = '';
 
-            if ($files)
+            if (!empty($files))
             {
-                if (ArrayHelper::getValue($options, 'options.multiple'))
+                $options['hint'] = [];
+
+                foreach ($files as $key => $file)
                 {
-                    foreach ($files as $file)
+                    $rowName = join('-', [$model->formName(), str_replace(['[', ']'], ['-', ''], $name), $key]);
+
+                    foreach ($file as $k => $v)
                     {
-                        foreach ($file as $k => $v)
-                            echo $form->field($model, $name . "[{$k}]")->hiddenInput(['value' => $v])->label(false);
+                        // die('<pre>'.print_r([$name, $key, $k, $v], 1).'</pre>');
+                        echo $form->field($model, $name . "[{$key}][{$k}]", ['options' => ['class' => $rowName]])->hiddenInput(['value' => $v])->label(false);
                     }
-                    $options['hint'] = join('<br>', array_keys(ArrayHelper::index($files, 'name')));
+
+                    $options['hint'][] = '<div>' . ArrayHelper::getValue($file, 'name') . ' ' . Html::a('<i class="glyphicon glyphicon-download"></i>', ['storage/download', 'file' => $file['filename']], ['class' => 'btn btn-link btn-xs', 'download' => true]) . ' ' . Html::a('&times;', '#', ['class' => 'btn btn-xs btn-danger', 'onclick' => '$(\'.' . $rowName . '\').remove();$(this).parent().remove();return false;']) . '</div>';
                 }
+                // $options['hint'] = join('<br>', array_keys(ArrayHelper::index($files, 'name')));
             }
+
+            if (!empty($options['options']['multiple']) && $options['options']['multiple'])
+                $name .= '[]';
 
             break;
     }
@@ -77,6 +91,6 @@ if (!empty($options['label']))
     $field->label($options['label']);
 
 if (!empty($options['hint']))
-    $field->hint($options['hint']);
+    $field->hint(is_array($options['hint']) ? join('', $options['hint']) : $options['hint']);
 
 echo $field;
