@@ -15,6 +15,7 @@ class UserController extends CrudController
             [
                 'class' => 'ethercreative\apie\grid\DateRangeColumn',
                 'attribute' => 'created_at',
+                'format' => 'datetime',
                 'from' => 'created_from',
                 'to' => 'created_to',
             ],
