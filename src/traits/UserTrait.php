@@ -35,6 +35,8 @@ trait UserTrait
             ['password', 'required', 'on' => 'default'],
             ['password', 'string', 'min' => 6, 'on' => 'default'],
             ['password', '\ethercreative\validators\BeenPwned'],
+
+            ['auth_key', 'default', \Yii::$app->security->generateRandomString(32)],
         ];
     }
 
