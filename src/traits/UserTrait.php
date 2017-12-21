@@ -2,6 +2,9 @@
 
 namespace ethercreative\apie\traits;
 
+use ethercreative\apie\models\user\RefreshToken;
+use ethercreative\apie\models\user\AccessToken;
+
 trait UserTrait
 {
     use \ethercreative\apie\traits\IdentityInterface;
