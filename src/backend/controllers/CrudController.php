@@ -71,7 +71,7 @@ class CrudController extends Controller
         return $this->render($this->getCustomViewPath('index'), [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
-            'columns' => $this->getColumns(),
+            'columns' => $this->getColumns($searchModel),
             'defaults' => $defaults,
         ]);
     }
@@ -220,7 +220,7 @@ class CrudController extends Controller
             {
                 foreach ($options as $key => &$value)
                 {
-                    $this->formatField($value);    
+                    $this->formatField($value);
                 }
             }
             else
@@ -274,7 +274,7 @@ class CrudController extends Controller
         }
     }
 
-    public function getColumns()
+    public function getColumns($searchModel = null)
     {
         $columns = $this->columns;
 
@@ -282,6 +282,7 @@ class CrudController extends Controller
         {
             if (is_string($column) || ArrayHelper::getValue($column, 'filterType') !== '\kartik\select2\Select2') continue;
 
+            $attribute = ArrayHelper::getValue($column, 'attribute');
             $url = ArrayHelper::getValue($column, 'filterWidgetOptions.pluginOptions.ajax.url');
 
             if (is_array($url))
@@ -293,6 +294,13 @@ class CrudController extends Controller
             {
                 $urlParts = [];
             }
+
+            if ($searchModel && $filterDataModel = ArrayHelper::getValue($column, 'filterDataModel'))
+            {
+                $column['filterWidgetOptions']['data'] = [1 => (string) ($filterDataModel)::findOne($searchModel->{$attribute})];
+            }
+
+            unset($column['filterDataModel']);
 
             if (strpos($url, '@api.') === 0)
             {
