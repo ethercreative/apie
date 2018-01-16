@@ -210,7 +210,7 @@ class CrudController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function getFields()
+    public function getFields($model = null)
     {
         $fields = $this->fields;
 
@@ -220,19 +220,19 @@ class CrudController extends Controller
             {
                 foreach ($options as $key => &$value)
                 {
-                    $this->formatField($value);
+                    $this->formatField($value, $model);
                 }
             }
             else
             {
-                $this->formatField($options);
+                $this->formatField($options, $model);
             }
         }
 
         return $fields;
     }
 
-    private function formatField(&$options)
+    private function formatField(&$options, $model = null)
     {
         $options = array_replace_recursive([
             'type' => 'textInput',
@@ -256,13 +256,32 @@ class CrudController extends Controller
 
         if ($options['type'] === 'widget' && $options['text_type'] === 'kartik\select2\Select2')
         {
+            $attribute = ArrayHelper::getValue($options, 'attribute');
             $url = ArrayHelper::getValue($options, 'options.pluginOptions.ajax.url');
+
+            if (is_array($url))
+            {
+                $urlParts = $url;
+                $url = array_shift($urlParts);
+            }
+            else
+            {
+                $urlParts = [];
+            }
+
+            if ($model && $filterDataModel = ArrayHelper::getValue($options, 'dataModel'))
+            {
+                $_value = ArrayHelper::getValue($model, $attribute);
+                $options['options']['data'] = [$_value => (string) ($filterDataModel)::findOne($_value)];
+            }
+
+            unset($options['filterDataModel']);
 
             if (strpos($url, '@api.') === 0)
             {
                 $getFields = join(',', ['id', ArrayHelper::getValue($options, 'options.pluginOptions.ajax.textColumn', 'name')]);
 
-                $options['options']['pluginOptions']['ajax']['url'] = Yii::$app->apiUrlManager->createAbsoluteUrl([substr($url, 5), 'access-token' => $this->api_key, 'fields' => $getFields]);
+                $options['options']['pluginOptions']['ajax']['url'] = Yii::$app->apiUrlManager->createAbsoluteUrl(array_replace_recursive($urlParts, [substr($url, 5), 'access-token' => $this->api_key, 'fields' => $getFields]));
                 $options['options']['pluginOptions']['ajax']['processResults'] = new JsExpression('function (results, params){ return {results:results}; }');
             }
 
@@ -297,7 +316,8 @@ class CrudController extends Controller
 
             if ($searchModel && $filterDataModel = ArrayHelper::getValue($column, 'filterDataModel'))
             {
-                $column['filterWidgetOptions']['data'] = [1 => (string) ($filterDataModel)::findOne($searchModel->{$attribute})];
+                $_value = ArrayHelper::getValue($searchModel, $attribute);
+                $column['filterWidgetOptions']['data'] = [$_value => (string) ($filterDataModel)::findOne($_value)];
             }
 
             unset($column['filterDataModel']);
