@@ -23,7 +23,8 @@ class CrudController extends Controller
             'id',
             'created_at:datetime',
             ['class' => 'yii\grid\ActionColumn'],
-        ];
+        ],
+        $exportColumns = [];
 
     private $_key;
 
@@ -72,6 +73,7 @@ class CrudController extends Controller
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
             'columns' => $this->getColumns($searchModel),
+            'exportColumns' => $this->getColumns($searchModel, $this->exportColumns),
             'defaults' => $defaults,
         ]);
     }
@@ -293,9 +295,11 @@ class CrudController extends Controller
         }
     }
 
-    public function getColumns($searchModel = null)
+    public function getColumns($searchModel = null, $columns = null)
     {
-        $columns = $this->columns;
+        if (!$columns) {
+            $columns = $this->columns;
+        }
 
         foreach ($columns as &$column)
         {
@@ -366,4 +370,5 @@ class CrudController extends Controller
 
         return $this->_key = $key->token;
     }
+   
 }
