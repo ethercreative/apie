@@ -317,7 +317,9 @@ class CrudController extends Controller
             if ($searchModel && $filterDataModel = ArrayHelper::getValue($column, 'filterDataModel'))
             {
                 $_value = ArrayHelper::getValue($searchModel, $attribute);
-                $column['filterWidgetOptions']['data'] = [$_value => (string) ($filterDataModel)::findOne($_value)];
+                if ($_value) {
+                    $column['filterWidgetOptions']['data'] = [$_value => (string) ($filterDataModel)::findOne($_value)];
+                }
             }
 
             unset($column['filterDataModel']);
