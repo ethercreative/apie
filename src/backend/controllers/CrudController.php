@@ -164,6 +164,18 @@ class CrudController extends Controller
                             $model->addError($attribute, $file->error);
                         }
                     }
+                    
+                    if (is_array($value)) {
+                    	foreach ($value as $_k => $_v) {
+                    		foreach ($_v as $__k => $__v) {
+	                    		if (strpos($__k, '\\')) {
+	                    			unset($value[$_k][$__k]);
+	                    		}
+	                    	}
+
+	                    	$_v = array_filter($_v);
+                    	}
+                    }
 
                     ArrayHelper::setValue($model, $attribute, array_values($value));
                 }
